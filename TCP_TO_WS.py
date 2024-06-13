@@ -85,7 +85,7 @@ async def websocket_client():
 async def send_heartbeat():
     while True:
         await asyncio.sleep(heartbeat_interval)
-        message = "s"
+        message = data.decode()
         print(f"发送心跳包: {message}")
         await broadcast_message_tcp(message)
 

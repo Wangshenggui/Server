@@ -5,7 +5,10 @@ import json
 
 connected_clients = []
 websocket_connection = None
-heartbeat_interval = 0.5  # 设置心跳包发送间隔为10秒
+heartbeat_interval = 0.5  # 设置心跳包发送间隔为0.5秒
+
+# 定义一个全局变量保存data的数据
+global_data = None
 
 async def handle_client(reader, writer):
     addr = writer.get_extra_info('peername')
@@ -19,7 +22,9 @@ async def handle_client(reader, writer):
             if not data:
                 break
 
-            message = data.decode()
+            global global_data
+            global_data = data.decode()  # 将接收到的data存入全局变量
+            message = global_data
             print(f"收到来自客户端 {addr} 的消息: {message}")
 
             # 发送消息到 WebSocket 服务器
@@ -83,12 +88,10 @@ async def websocket_client():
             await asyncio.sleep(5)  # 等待几秒钟再尝试重新连接
 
 async def send_heartbeat():
+    global global_data
     while True:
         await asyncio.sleep(heartbeat_interval)
-        data = await reader.read(100)
-            if not data:
-                break
-        message = data.decode()
+        message = global_data if global_data is not None else "s"  # 使用全局数据或默认值
         print(f"发送心跳包: {message}")
         await broadcast_message_tcp(message)
 

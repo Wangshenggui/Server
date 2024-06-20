@@ -5,7 +5,7 @@ import json
 
 connected_clients = []
 websocket_connection = None
-heartbeat_interval = 0.5  # 设置心跳包发送间隔为0.5秒
+heartbeat_interval = 1.0  # 设置心跳包发送间隔为0.5秒
 
 # 定义一个全局变量保存data的数据
 global_data = None

@@ -67,7 +67,7 @@ async def handle_websocket_message(message):
     print(f"收到来自 WebSocket 服务器的消息: {message}")
     try:
         json_message = json.loads(message)
-        if "n1" in json_message or "lte" in json_message or "rtk" in json_message:
+        if "n1" in json_message or "lte" in json_message or "rtk" in json_message or "lon" in json_message:
             await broadcast_message_tcp(message)
     except json.JSONDecodeError as e:
         print(f"解析 WebSocket 消息时发生错误: {e}")

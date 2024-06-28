@@ -85,7 +85,7 @@ async def handle_websocket_message(message):
             with lock:
                 await broadcast_message_tcp(message)
         # 如果消息中包含 "lon" 键，保存消息到全局变量
-        else if "lon" in json_message:
+        elif "lon" in json_message:
             global lon_message
             lon_message = message
             print(f"保存包含 'lon' 的消息: {lon_message}")

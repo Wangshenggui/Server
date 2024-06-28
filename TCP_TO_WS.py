@@ -2,6 +2,7 @@ import asyncio
 import websockets
 from websockets import ConnectionClosed
 import json
+import threading
 
 # 用于跟踪已连接的 TCP 客户端的列表
 connected_clients = []
@@ -14,6 +15,8 @@ heartbeat_interval = 1.0  # 设置心跳包发送间隔为1秒
 global_data = None
 # 全局变量，用于存储包含 "lon" 的消息
 lon_message = None
+
+mutex = threading.Lock()  # 创建一个锁
 
 # 处理 TCP 客户端连接
 async def handle_client(reader, writer):
@@ -82,7 +85,7 @@ async def handle_websocket_message(message):
         # 检查消息中是否包含特定键，如果包含则广播到 TCP 客户端
         if "n1" in json_message or "lte" in json_message or "rtk" in json_message:
             # 使用 with 语句自动获取和释放锁
-            with lock:
+            with mutex:
                 await broadcast_message_tcp(message)
         # 如果消息中包含 "lon" 键，保存消息到全局变量
         elif "lon" in json_message:

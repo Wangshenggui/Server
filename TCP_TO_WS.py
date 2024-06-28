@@ -115,8 +115,8 @@ async def send_heartbeat():
         message = global_data if global_data is not None else "s"  # 使用全局数据或默认值
         print(f"发送心跳包: {message}")
         await broadcast_message_tcp(message)
-        message = json.loads(lon_message)
-        await broadcast_message_tcp(message)
+        #message = json.loads(lon_message)
+        await broadcast_message_tcp(lon_message)
 
 # 主函数，启动 TCP 服务器和其他任务
 async def main():

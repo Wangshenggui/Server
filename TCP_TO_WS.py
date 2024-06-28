@@ -12,6 +12,8 @@ heartbeat_interval = 1.0  # 设置心跳包发送间隔为1秒
 
 # 全局变量，用于存储从 TCP 客户端接收到的数据
 global_data = None
+# 全局变量，用于存储包含 "lon" 的消息
+lon_message = None
 
 # 处理 TCP 客户端连接
 async def handle_client(reader, writer):
@@ -78,8 +80,13 @@ async def handle_websocket_message(message):
     try:
         json_message = json.loads(message)
         # 检查消息中是否包含特定键，如果包含则广播到 TCP 客户端
-        if "n1" in json_message or "lte" in json_message or "rtk" in json_message or "lon" in json_message:
+        if "n1" in json_message or "lte" in json_message or "rtk" in json_message:
             await broadcast_message_tcp(message)
+        # 如果消息中包含 "lon" 键，保存消息到全局变量
+        if "lon" in json_message:
+            global lon_message
+            lon_message = json_message
+            print(f"保存包含 'lon' 的消息: {lon_message}")
     except json.JSONDecodeError as e:
         print(f"解析 WebSocket 消息时发生错误: {e}")
 
@@ -107,6 +114,7 @@ async def send_heartbeat():
         message = global_data if global_data is not None else "s"  # 使用全局数据或默认值
         print(f"发送心跳包: {message}")
         await broadcast_message_tcp(message)
+        await broadcast_message_tcp(lon_message)
 
 # 主函数，启动 TCP 服务器和其他任务
 async def main():

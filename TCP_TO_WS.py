@@ -79,7 +79,7 @@ async def send_message_to_websocket(message):
 
 # 处理从 WebSocket 服务器接收到的消息
 async def handle_websocket_message(message):
-    print(f"收到来自 WebSocket 服务器的消息: {message}")
+    #print(f"收到来自 WebSocket 服务器的消息: {message}")
     try:
         json_message = json.loads(message)
         # 检查消息中是否包含特定键，如果包含则广播到 TCP 客户端
@@ -119,8 +119,8 @@ async def send_heartbeat():
         message = global_data if global_data is not None else "s"  # 使用全局数据或默认值
         print(f"发送心跳包: {message}")
         await broadcast_message_tcp(message)
-        await asyncio.sleep(0.1)
-        await broadcast_message_tcp(lon_message)
+        #await asyncio.sleep(0.1)
+        #await broadcast_message_tcp(lon_message)
 
 # 主函数，启动 TCP 服务器和其他任务
 async def main():

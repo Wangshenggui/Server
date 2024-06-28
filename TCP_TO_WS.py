@@ -109,14 +109,14 @@ async def websocket_client():
 # 向所有已连接的 TCP 客户端发送心跳消息
 async def send_heartbeat():
     global global_data
+    global lon_message
     while True:
         await asyncio.sleep(heartbeat_interval)
         message = global_data if global_data is not None else "s"  # 使用全局数据或默认值
         print(f"发送心跳包: {message}")
         await broadcast_message_tcp(message)
-        global lon_message
-        json_message = json.loads(lon_message)
-        await broadcast_message_tcp(json_message)
+        message = json.loads(lon_message)
+        await broadcast_message_tcp(message)
 
 # 主函数，启动 TCP 服务器和其他任务
 async def main():

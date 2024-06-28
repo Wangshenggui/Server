@@ -115,7 +115,8 @@ async def send_heartbeat():
         print(f"发送心跳包: {message}")
         await broadcast_message_tcp(message)
         global lon_message
-        await broadcast_message_tcp(lon_message)
+        json_message = json.loads(lon_message)
+        await broadcast_message_tcp(json_message)
 
 # 主函数，启动 TCP 服务器和其他任务
 async def main():

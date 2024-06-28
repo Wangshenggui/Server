@@ -9,7 +9,7 @@ connected_clients = []
 # WebSocket 连接实例
 websocket_connection = None
 # 发送心跳消息的间隔时间
-heartbeat_interval = 1.0  # 设置心跳包发送间隔为1秒
+heartbeat_interval = 0.9  # 设置心跳包发送间隔为1秒
 
 # 全局变量，用于存储从 TCP 客户端接收到的数据
 global_data = None
@@ -88,10 +88,9 @@ async def handle_websocket_message(message):
             with mutex:
                 await broadcast_message_tcp(message)
         # 如果消息中包含 "lon" 键，保存消息到全局变量
-        #elif "lon" in json_message:
-        #    global lon_message
-        #    lon_message = message
-        #    print(f"保存包含 'lon' 的消息: {lon_message}")
+        elif "lon" in json_message:
+            global lon_message
+            lon_message = message
     except json.JSONDecodeError as e:
         print(f"解析 WebSocket 消息时发生错误: {e}")
 
@@ -120,8 +119,8 @@ async def send_heartbeat():
         message = global_data if global_data is not None else "s"  # 使用全局数据或默认值
         print(f"发送心跳包: {message}")
         await broadcast_message_tcp(message)
-        #message = json.loads(lon_message)
-        #await broadcast_message_tcp(lon_message)
+        await asyncio.sleep(0.1)
+        await broadcast_message_tcp(lon_message)
 
 # 主函数，启动 TCP 服务器和其他任务
 async def main():

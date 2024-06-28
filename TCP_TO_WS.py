@@ -13,7 +13,7 @@ heartbeat_interval = 1.0  # 设置心跳包发送间隔为1秒
 # 全局变量，用于存储从 TCP 客户端接收到的数据
 global_data = None
 # 全局变量，用于存储包含 "lon" 的消息
-lon_message = None
+lon_message = bytes
 
 # 处理 TCP 客户端连接
 async def handle_client(reader, writer):
